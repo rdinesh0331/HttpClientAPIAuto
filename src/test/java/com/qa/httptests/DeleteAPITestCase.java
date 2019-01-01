@@ -7,38 +7,36 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.qa.HTTPClient.RestClient;
 
-public class GetAPITestCase {
+public class DeleteAPITestCase {
 	
 	 RestClient restclient;
-	 String url = "http://restapi.demoqa.com/utilities/weather/city";
+	 String url = "https://reqres.in/api/users";
 	 String apiurl;
 	
 	@BeforeMethod
 	public  void setup() {
-		apiurl = url+"/pune";
+		apiurl = url+"/2";
 		}
 	
 	@Test
-	public void getAPITest() throws ClientProtocolException, IOException {
+	public void deleteAPItest() throws ClientProtocolException, IOException {
 		restclient = new RestClient();
-		CloseableHttpResponse response = restclient.get(apiurl);
+		CloseableHttpResponse response = restclient.delete(apiurl);
 		
 		//get status code
 		int statuscode = response.getStatusLine().getStatusCode();
 		System.out.println(statuscode);
-		Assert.assertEquals(statuscode, 200);
+		Assert.assertEquals(statuscode, 204);
 	
 		//convert json response object to string using getEntity method
 		HttpEntity httpentity =response.getEntity();
-		String bodyresponse = EntityUtils.toString(httpentity);
-		System.out.println(bodyresponse);
+		Assert.assertNull(httpentity);
 		
 		//get header contents
 		Header headers[] = response.getAllHeaders();
@@ -48,8 +46,9 @@ public class GetAPITestCase {
 		}
 		
 		System.out.println(hmap);
-		System.out.println(hmap.get("Content-Type"));
+		System.out.println(hmap.get("Connection"));
 		
 	}
+
 
 }

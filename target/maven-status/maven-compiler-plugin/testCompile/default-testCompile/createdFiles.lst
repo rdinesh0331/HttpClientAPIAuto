@@ -1,0 +1,4 @@
+com/qa/httptests/DeleteAPITestCase.class
+com/qa/httptests/GetAPITestCase.class
+com/qa/httptests/PutAPITestCase.class
+com/qa/httptests/PostAPITestCase.class

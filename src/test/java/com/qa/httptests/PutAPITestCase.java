@@ -14,9 +14,9 @@ import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qa.HTTPClient.RestClient;
-import com.qa.data.Users;
+import com.qa.data.UsersUpdate;
 
-public class PostAPITestCase {
+public class PutAPITestCase {
 	
 	String url = "https://reqres.in";
 	String apiUrl;
@@ -24,11 +24,11 @@ public class PostAPITestCase {
 	
 	@BeforeMethod
 	public void setup() {
-		apiUrl = url+"/api/users";
+		apiUrl = url+"/api/users/2";
 	}
 	
 	@Test
-	public void postAPItest() throws ClientProtocolException, IOException {
+	public void putAPItest() throws ClientProtocolException, IOException {
 		restclient = new RestClient();
 		
 		//hashmap preparation for header
@@ -38,18 +38,18 @@ public class PostAPITestCase {
 		//prepare json pay load using jackson api - core and data-bind  APIs	
 		//ObjectMapper provides functionality for reading and writing JSON,either to and from basic POJOs (Plain Old Java Objects),
 		ObjectMapper mapper = new ObjectMapper();
-		Users users = new Users("Test", "Manager");
+		UsersUpdate users = new UsersUpdate("Test", "Senior Manager");
 		
 		//convert java object to JSON string - Serialization or Marshelling
 		String userJsonString = mapper.writeValueAsString(users);
 		System.out.println(userJsonString);
 		
-		CloseableHttpResponse response = restclient.post(apiUrl, userJsonString, headerMap);
+		CloseableHttpResponse response = restclient.put(apiUrl, userJsonString, headerMap);
 		
 		//get the status code
 		int statuscode = response.getStatusLine().getStatusCode();
 		System.out.println(statuscode);
-		Assert.assertEquals(statuscode, 201);
+		Assert.assertEquals(statuscode, 200);
 		
 		//get the json payload in the response
 		HttpEntity httpentity = response.getEntity();
@@ -61,11 +61,9 @@ public class PostAPITestCase {
 		System.out.println(jsonresponse);
 		
 		//Convert json string to java object - Deserialization or unmarshelling
-		Users usersobj = mapper.readValue(responseString,Users.class);
+		UsersUpdate usersobj = mapper.readValue(responseString,UsersUpdate.class);
 		System.out.println(usersobj.getName());
 		System.out.println(usersobj.getJob());
-		String responseID = usersobj.getId();
-		Assert.assertNotNull(responseID);
 		Assert.assertEquals(usersobj.getName(), users.getName());
 
 		
